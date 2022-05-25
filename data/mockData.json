@@ -1,0 +1,38 @@
+{
+    "tipo": [
+        {
+            "id": 1,
+            "descricao": "Desktop"
+          },
+          {
+            "id": 2,
+            "descricao": "Notebook"
+          },
+          {
+            "id": 3,
+            "descricao": "Smartphone"
+          },
+          {
+            "id": 4,
+            "descricao": "[Outro]"
+          }
+    ],
+    "marca": [
+        {
+          "id": 1,
+          "descricao": "Lenovo"
+        },
+        {
+          "id": 2,
+          "descricao": "Dell"
+        },
+        {
+          "id": 3,
+          "descricao": "Apple"
+        },
+        {
+            "id": 4,
+            "descricao": "[Outro]"
+        }
+    ]
+}
