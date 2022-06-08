@@ -1,13 +1,16 @@
 import { useField } from "formik";
+import { ElementType } from "react";
 import { Form } from "react-bootstrap";
 import useHelpText from "../hooks/useHelpText";
 
 type FieldTextProps = {
     label: string,
-    type: string,
+    type?: string,
+    as?: ElementType<any>, // React Bootstrap
+    rows?: number, // Textarea
     id: string,
     name: string,
-    placeholder: string,
+    placeholder?: string,
     defaultHelpMessage: string,
     helpTextId: string,
 }

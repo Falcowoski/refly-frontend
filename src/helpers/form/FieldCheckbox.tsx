@@ -6,11 +6,9 @@ type FieldCheckboxTypes = {
     label: string,
     id: string,
     name: string,
-    defaultHelpMessage: string,
-    helpTextId: string
 }
 
-function FieldCheckbox({ label, id, defaultHelpMessage, helpTextId, ...props}: FieldCheckboxTypes) {
+function FieldCheckbox({ label, id, ...props}: FieldCheckboxTypes) {
     const [field, { touched, error }] = useField({ ...props, type: 'checkbox' });
     const validationProp = useFieldValidation(touched, error);
 
@@ -25,7 +23,7 @@ function FieldCheckbox({ label, id, defaultHelpMessage, helpTextId, ...props}: F
                 <Form.Check.Label>{label}</Form.Check.Label>
 
                 <Form.Control.Feedback type="valid">
-                    Looks good!
+                    Tudo certo!
                 </Form.Control.Feedback>
 
                 <Form.Control.Feedback type="invalid">

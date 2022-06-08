@@ -86,8 +86,6 @@ function CreateRecordFormik() {
                         label="Eu aceito os termos"
                         name="acceptedTerms"
                         id="acceptedTermsCheckbox"
-                        defaultHelpMessage="Aceita aí, por favor"
-                        helpTextId="acceptedTermsHelpBlock"
                     />
 
                     <Button disabled={!isValid} variant="primary" type="submit">

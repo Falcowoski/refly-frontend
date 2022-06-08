@@ -1,97 +1,171 @@
-import { ChangeEvent } from "react";
-import { Button, Form } from "react-bootstrap";
+import { Form, Formik } from 'formik';
+import { Fragment } from 'react';
+import { Button } from 'react-bootstrap';
+import * as Yup from 'yup';
+import FieldCheckbox from '../../helpers/form/FieldCheckbox';
+import FieldSelect from '../../helpers/form/FieldSelect';
+import FieldText from '../../helpers/form/FieldText';
 
-function RecordForm() {
-    const handleSubmit = (event: ChangeEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        console.log("Enviando...")
+type CreateRecordValues = {
+    type: number | string,
+    brand: number | string,
+    key: number | string,
+    notes: string,
+    user: number | string,
+    password: string,
+    disclaimer: boolean
+};
 
-        const formData = new FormData(event.target);
+type Options = {
+    id: number,
+    label: string
+}[];
 
-        for (const [key, value] of formData.entries()) {
-            console.count("Loop")
-            console.log({key})
-            console.log({value})
-        }
+const createRecordInitialValues: CreateRecordValues = {
+    type: '',
+    brand: '',
+    key: '',
+    notes: '',
+    user: '',
+    password: '',
+    disclaimer: false
+};
+
+const createRecordValidation = Yup.object({
+    type: Yup.number().required('Obrigatório!'),
+    brand: Yup.number().required('Obrigatório!'),
+    key: Yup.number(),
+    notes: Yup.string()
+        .max(1000, 'Deve ter 1000 caracteres ou menos')
+        .required('Obrigatório!'),
+    user: Yup.number().required('Obrigatório!'),
+    password: Yup.string().required('Obrigatório!'),
+    disclaimer: Yup.boolean()
+        .oneOf([true], 'Obrigatório!')
+        .required(),
+})
+
+const typeOptions = [
+    { id: 1, label: 'Notebook' },
+    { id: 2, label: 'Desktop' },
+    { id: 3, label: 'All in One' },
+    { id: 4, label: 'Smartphone' },
+    { id: 5, label: 'Impressora' },
+    { id: 6, label: 'Monitor' },
+];
+
+const brandOptions = [
+    { id: 1, label: 'Dell' },
+    { id: 2, label: 'HP' },
+    { id: 3, label: 'Acer' },
+    { id: 4, label: 'Lenovo' },
+    { id: 5, label: 'Samsung' },
+    { id: 6, label: 'Motorola' },
+];
+
+const userOptions = [
+    { id: 1, label: 'Leonardo' },
+    { id: 2, label: 'Márcia' },
+    { id: 3, label: 'Lucas' },
+]
+
+function CreateRecordForm() {
+    const getOptions = (options: Options) => {
+        return options.map(({ id, label }) => (
+            <option value={id} key={id}>
+                {label}
+            </option>
+        ));
     }
+
+    const handleSubmit = (values: CreateRecordValues) => {
+        console.log({values})
+    }
+
     return (
-        <Form onSubmit={handleSubmit}>
-            <Form.Group className="mb-3" controlId="type">
-                <Form.Label>Tipo de Equipamento</Form.Label>
-                <Form.Select name="type" aria-describedby="typeHelpBlock">
-                    <option value="1">Opção A</option>
-                    <option value="2">Opção B</option>
-                    <option value="3">Opção C</option>
-                </Form.Select>
-                <Form.Text id="typeHelpBlock" muted>
-                    Lorem ipsum dolor sit amet consectetur adipisicing.
-                </Form.Text>
-            </Form.Group>
+        <Formik
+            initialValues={createRecordInitialValues}
+            validationSchema={createRecordValidation}
+            onSubmit={handleSubmit}
+        >
+            {({ isValid, submitCount }) => (
+                <Form noValidate>
+                    <FieldSelect
+                        label="Tipo de Equipamento"
+                        name="type"
+                        id="typeFormSelect"
+                        defaultHelpMessage="Lorem ipsum dolor sit amet consectetur."
+                        helpTextId="typeHelpBlock"
+                    >
+                        <option>Selecione um tipo de equipamento</option>
+                        <Fragment>{getOptions(typeOptions)}</Fragment>
+                    </FieldSelect>
 
-            <Form.Group className="mb-3" controlId="brand">
-                <Form.Label>Marca do Equipamento</Form.Label>
-                <Form.Select name="brand" aria-describedby="brandHelpBlock">
-                    <option value="1">Opção A</option>
-                    <option value="2">Opção B</option>
-                    <option value="3">Opção C</option>
-                </Form.Select>
-                <Form.Text id="brandHelpBlock" muted>
-                    Lorem ipsum dolor sit amet consectetur adipisicing.
-                </Form.Text>
-            </Form.Group>
+                    <FieldSelect
+                        label="Marca do Equipamento"
+                        name="brand"
+                        id="brandFormSelect"
+                        defaultHelpMessage="Lorem ipsum dolor sit amet consectetur."
+                        helpTextId="brandHelpBlock"
+                    >
+                        <option>Selecione a marca do equipamento</option>
+                        <Fragment>{getOptions(brandOptions)}</Fragment>
+                    </FieldSelect>
 
-            <Form.Group className="mb-3" controlId="key">
-                <Form.Label>Código do Equipamento <small>(opcional)</small></Form.Label>
-                <Form.Control 
-                    type="number" 
-                    name="key" 
-                    aria-describedby="keyHelpBlock" 
-                    placeholder="Lorem ipsum dolor"
-                />
-                <Form.Text id="keyHelpBlock">
-                    Insira a identificação de um equipamento já registrado fora do sistema
-                </Form.Text>
-            </Form.Group>
+                    <FieldText 
+                        label="Código do Equipamento"
+                        name="key"
+                        id="keyFormInput"
+                        type="number"
+                        defaultHelpMessage="Lorem ipsum dolor sit amet consectetur."
+                        helpTextId="keyHelpBlock"
+                    />
 
-            <Form.Group className="mb-3" controlId="notes">
-                <Form.Label>Observações <small>(opcional)</small></Form.Label>
-                <Form.Control 
-                    name="notes"
-                    placeholder="Lorem ipsum dolor sit amet consectetur adipisicing."
-                    as="textarea"
-                    rows={3}
-                />
-            </Form.Group>
+                    <FieldText 
+                        label="Observações"
+                        name="notes"
+                        id="notesFormInput"
+                        as="textarea"
+                        rows={3}
+                        defaultHelpMessage="Lorem ipsum dolor sit amet consectetur."
+                        helpTextId="notesHelpBlock"
+                    />
 
-            <h5>Campo do Responsável</h5>
+                    <h2 className="h5">Campo do Responsável</h2>
 
-            <Form.Group className="mb-3" controlId="password">
-                <Form.Label>Senha</Form.Label>
-                <Form.Control 
-                    type="password" 
-                    name="password" 
-                    aria-describedby="passwordHelpBlock"
-                    placeholder="Lorem ipsum dolor" 
-                />
-                <Form.Text id="passwordHelpBlock" muted>
-                    Lorem ipsum dolor sit amet consectetur adipisicing.
-                </Form.Text>
-            </Form.Group>
+                    <FieldSelect
+                        label="Responsável"
+                        name="user"
+                        id="userFormSelect"
+                        defaultHelpMessage="Lorem ipsum dolor sit amet consectetur."
+                        helpTextId="brandHelpBlock"
+                    >
+                        <option>Selecione o usuário responsável</option>
+                        <Fragment>{getOptions(userOptions)}</Fragment>
+                    </FieldSelect>
 
+                    <FieldText 
+                        label="Senha"
+                        name="password"
+                        id="passwordFormInput"
+                        type="password"
+                        defaultHelpMessage="Lorem ipsum dolor sit amet consectetur."
+                        helpTextId="keyHelpBlock"
+                    />
 
-            <Form.Group className="mb-3" controlId="disclaimer">
-                <Form.Check 
-                    type="checkbox"
-                    name="disclaimer" 
-                    label="Me responsabilizo pelas informações relatadas acima" 
-                />
-            </Form.Group>
+                    <FieldCheckbox 
+                        label="Confirmo a autenticidade das informações acima"
+                        name="disclaimer"
+                        id="disclaimerFormCheckbox"
+                    />
 
-            <Button variant="primary" type="submit">
-                Salvar
-            </Button>
-        </Form>
+                    <Button disabled={submitCount > 0 && !isValid} variant="primary" type="submit">
+                        Salvar
+                    </Button>
+                </Form>
+            )}
+        </Formik>
     );
 }
 
-export default RecordForm;
+export default CreateRecordForm;
